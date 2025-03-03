@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/akelbikhanov/garantex_bot/internal/service"
 	"log"
 
 	"github.com/akelbikhanov/garantex_bot/internal/config"
@@ -27,6 +28,13 @@ func main() {
 			Text:   "Привет! Я буду отправлять тебе курс USDT/RUB.",
 		})
 	})
+
+	// Получаем курс USDT/RUB перед запуском бота
+	buy, sell, err := service.GetUSDTPrice()
+	if err != nil {
+		log.Fatalf("Ошибка получения курса USDT/RUB: %v", err)
+	}
+	log.Printf("Курс USDT/RUB: покупка %s ₽, продажа %s ₽", buy, sell)
 
 	// Запускаем бота
 	b.Start(context.Background())
