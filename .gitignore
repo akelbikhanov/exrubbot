@@ -1,0 +1,21 @@
+# Go бинарники и кеш
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.log
+*.test
+*.out
+*.prof
+*.sum
+*.mod
+/vendor/
+
+# Кеш IDE (GoLand, JetBrains)
+.idea/
+*.iml
+.DS_Store
+
+# Переменные окружения (секреты)
+.env
