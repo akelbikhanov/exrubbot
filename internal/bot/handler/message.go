@@ -1,24 +1,28 @@
 package handler
 
 import (
-	"context"
 	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
-	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )
 
 // messageHandler
-func messageHandler(ctx context.Context, b *bot.Bot, msg *models.Message) {
+func (h *Handler) messageHandler(msg *models.Message) {
 	switch msg.Text {
 	case common.CommandStart:
-		sendTextHandler(ctx, b, msg.From.ID, common.MessageStart, nil)
+		SendText(h.ctx, h.b, msg.From.ID, common.MessageStart, nil)
 	case common.CommandHelp:
-		sendTextHandler(ctx, b, msg.From.ID, common.MessageHelp, nil)
+		SendText(h.ctx, h.b, msg.From.ID, common.MessageHelp, nil)
 	case common.CommandPrice:
-		sendTextHandler(ctx, b, msg.From.ID, garantex.GetPriceText(), nil)
+		SendText(h.ctx, h.b, msg.From.ID, garantex.GetPriceText(), nil)
 	case common.CommandRepeat:
+		SendText(h.ctx, h.b, msg.From.ID, common.MessageRepeat, kbRepeat)
 	case common.CommandStop:
+		if h.Unsubscribe(msg.From.ID) {
+			SendText(h.ctx, h.b, msg.From.ID, common.MessageStopYes, nil)
+		} else {
+			SendText(h.ctx, h.b, msg.From.ID, common.MessageStopNo, nil)
+		}
 	default:
 	}
 }

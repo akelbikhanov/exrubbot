@@ -28,10 +28,12 @@ func Run() error {
 		ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 		defer cancel()
 
+		h := handler.New(ctx)
+
 		options := []bot.Option{
 			bot.WithCheckInitTimeout(config.Get().DefaultTimeout),
-			bot.WithDefaultHandler(handler.DefaultHandler()),
-			bot.WithErrorsHandler(handler.ErrorsHandler(cancel, config.Get().DefaultTimeout)),
+			bot.WithDefaultHandler(h.DefaultHandler()),
+			bot.WithErrorsHandler(h.ErrorsHandler(cancel, config.Get().DefaultTimeout)),
 		}
 
 		var b *bot.Bot
@@ -39,6 +41,9 @@ func Run() error {
 		if initErr != nil {
 			return
 		}
+
+		// Передаем ссылку на бота в Handler.
+		h.SetBot(b)
 
 		// Запускаем бота
 		b.Start(ctx)

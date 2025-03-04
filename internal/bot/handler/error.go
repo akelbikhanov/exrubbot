@@ -10,7 +10,7 @@ import (
 
 // ErrorsHandler функция обработки ошибок, получаемых при запросе данных
 // здесь перехватываются ошибки, связанные с фоновым взаимодействием бота и сервиса
-func ErrorsHandler(cancelFunc context.CancelFunc, duration time.Duration) bot.ErrorsHandler {
+func (h *Handler) ErrorsHandler(cancelFunc context.CancelFunc, duration time.Duration) bot.ErrorsHandler {
 	return func(e error) {
 		common.LogError(e)
 

@@ -1,6 +1,8 @@
 package common
 
-import "time"
+import (
+	"time"
+)
 
 // Название переменных окружения
 const (
@@ -17,7 +19,7 @@ const (
 	ErrLoadEnv           = "ошибка загрузки переменных окружения из .env файла: %v"
 	ErrMissingEnvVar     = "отсутствует переменная окружения: %s"
 	InfoUpdateSkip       = "update #%d был пропущен"
-	InfoUpdateProcessed  = "update #%d был обработан за %v"
+	InfoUpdateProcessed  = "update #%d обработан за %s"
 )
 
 // Команды бота
@@ -36,12 +38,16 @@ const (
 		"• периодически присылать её вам (/repeat)\n\n" +
 		"Для подробностей используйте /help."
 	MessageHelp = "Доступные команды:\n" +
-		"• /price – получает актуальную цену USDT/RUB с Garantex.\n" +
-		"• /repeat – периодическое получение цены.\n" +
-		"• /stop – прекращает автоматическую рассылку."
+		CommandStart + " – запуск/описание бота\n" +
+		CommandHelp + " – список доступных команд\n" +
+		CommandPrice + " – получить текущую цену USDT/RUB с Garantex\n" +
+		CommandRepeat + " – периодическое получение цены\n" +
+		CommandStop + " – остановить рассылку"
 	MessagePrice   = "USDT/RUB • Garantex\nask: %.2f RUB (%0.f USDT)\nbid: %.2f RUB (%0.f USDT)\n\n%s MSK (UTC+3)"
-	MessageStopNo  = "У вас нет активной подписки"
-	MessageStopYes = "Периодическая отправка остановлена"
+	MessageRepeat  = "Выберите интервал получения цен:"
+	MessageStopNo  = "У вас нет активной подписки." + MessageStopAdd
+	MessageStopYes = "Периодическое получение остановлено." + MessageStopAdd
+	MessageStopAdd = "\nВозобновить: " + CommandRepeat + ", разово: " + CommandPrice
 	MessageError   = "произошла ошибка: %v"
 )
 
