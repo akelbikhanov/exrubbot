@@ -1,28 +1,46 @@
 package config
 
 import (
-	"log"
-	"os"
+	"fmt"
+	"sync"
+	"syscall"
+	"time"
 
+	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/joho/godotenv"
 )
 
-// Config - структура для хранения конфигурации
+// Config - структура для хранения конфигурации приложения
 type Config struct {
-	TelegramToken string
+	BotToken       string        // Токен Telegram бота
+	DefaultTimeout time.Duration // Таймаут запросов по умолчанию
 }
 
-// LoadConfig загружает .env, но позволяет переопределять переменные через ОС
-func LoadConfig() *Config {
-	_ = godotenv.Load() // Загружаем .env (если есть)
+var (
+	cfg  Config
+	once sync.Once
+)
 
-	config := &Config{
-		TelegramToken: os.Getenv("TELEGRAM_BOT_TOKEN"),
-	}
+// Get загружает переменные окружения из файла .env (если он есть)
+// а затем пытается их прочесть из ОС
+func Get() *Config {
+	once.Do(func() {
+		var (
+			exists bool
+			err    error
+		)
 
-	if config.TelegramToken == "" {
-		log.Fatal("TELEGRAM_BOT_TOKEN не задан в .env или переменных окружения")
-	}
+		// подгружаем переменные окружения из файла (если есть)
+		if err = godotenv.Load(); err != nil {
+			common.LogError(fmt.Errorf(common.ErrLoadEnv, err))
+		}
 
-	return config
+		cfg.BotToken, exists = syscall.Getenv(common.EnvBotToken)
+		if !exists {
+			common.LogError(fmt.Errorf(common.ErrMissingEnvVar, common.EnvBotToken))
+		}
+
+		cfg.DefaultTimeout = common.DefaultTimeout
+	})
+	return &cfg
 }
