@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
 	"github.com/go-telegram/bot"
+	"sync"
 	"time"
 )
 
@@ -12,6 +13,7 @@ type subscription struct {
 	interval time.Duration
 	ticker   *time.Ticker
 	stop     chan struct{}
+	once     sync.Once
 }
 
 func (h *Handler) Subscribe(chatID int64, duration time.Duration) {
@@ -68,5 +70,7 @@ func (s *subscription) run(ctx context.Context, b *bot.Bot, chatID int64) {
 
 // stopSubscription сигнализирует о завершении работы подписки, закрывая канал stop.
 func (s *subscription) stopSubscription() {
-	close(s.stop)
+	s.once.Do(func() {
+		close(s.stop)
+	})
 }
