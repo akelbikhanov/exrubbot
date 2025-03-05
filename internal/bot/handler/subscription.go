@@ -2,10 +2,11 @@ package handler
 
 import (
 	"context"
-	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
-	"github.com/go-telegram/bot"
 	"sync"
 	"time"
+
+	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
+	"github.com/go-telegram/bot"
 )
 
 // subscription хранит параметры подписки пользователя.

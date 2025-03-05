@@ -3,9 +3,10 @@ package handler
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/go-telegram/bot"
-	"time"
 )
 
 // ErrorsHandler функция обработки ошибок, получаемых при запросе данных

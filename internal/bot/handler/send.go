@@ -2,14 +2,15 @@ package handler
 
 import (
 	"context"
+
 	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )
 
-func SendText(ctx context.Context, b *bot.Bot, ChatID int64, text string, kb models.ReplyMarkup) {
+func SendText(ctx context.Context, b *bot.Bot, chatID int64, text string, kb models.ReplyMarkup) {
 	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID:      ChatID,
+		ChatID:      chatID,
 		Text:        bot.EscapeMarkdown(text),
 		ParseMode:   models.ParseModeMarkdown,
 		ReplyMarkup: kb,
@@ -19,10 +20,10 @@ func SendText(ctx context.Context, b *bot.Bot, ChatID int64, text string, kb mod
 	}
 }
 
-func EditText(ctx context.Context, b *bot.Bot, ChatID int64, MessageID int, text string) {
+func EditText(ctx context.Context, b *bot.Bot, chatID int64, messageID int, text string) {
 	_, err := b.EditMessageText(ctx, &bot.EditMessageTextParams{
-		ChatID:    ChatID,
-		MessageID: MessageID,
+		ChatID:    chatID,
+		MessageID: messageID,
 		Text:      bot.EscapeMarkdown(text),
 		ParseMode: models.ParseModeMarkdown,
 	})

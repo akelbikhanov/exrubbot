@@ -2,12 +2,13 @@ package handler
 
 import (
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
-	"strings"
-	"time"
 )
 
 var (

@@ -3,16 +3,17 @@ package handler
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
-	"time"
 )
 
 // DefaultHandler обработчик по-умолчанию
 // первая точка входа обработки всех запросов
 func (h *Handler) DefaultHandler() bot.HandlerFunc {
-	return func(ctx context.Context, b *bot.Bot, update *models.Update) {
+	return func(_ context.Context, _ *bot.Bot, update *models.Update) {
 		start := time.Now()
 		defer func() {
 			elapsed := time.Since(start)

@@ -2,8 +2,9 @@ package handler
 
 import (
 	"context"
-	"github.com/go-telegram/bot"
 	"sync"
+
+	"github.com/go-telegram/bot"
 )
 
 // Handler отвечает за обработку обновлений и управление подписками.

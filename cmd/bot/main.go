@@ -1,9 +1,10 @@
 package main
 
 import (
+	"os"
+
 	"github.com/akelbikhanov/garantex_bot/internal/bot"
 	"github.com/akelbikhanov/garantex_bot/internal/common"
-	"os"
 )
 
 func main() {

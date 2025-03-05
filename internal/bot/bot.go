@@ -3,11 +3,11 @@ package bot
 import (
 	"context"
 	"errors"
-	"github.com/akelbikhanov/garantex_bot/internal/bot/handler"
 	"os/signal"
 	"sync"
 	"syscall"
 
+	"github.com/akelbikhanov/garantex_bot/internal/bot/handler"
 	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"github.com/akelbikhanov/garantex_bot/internal/config"
 	"github.com/go-telegram/bot"

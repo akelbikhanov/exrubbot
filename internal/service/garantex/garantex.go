@@ -3,11 +3,12 @@ package garantex
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/akelbikhanov/garantex_bot/internal/common"
 	"math"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/akelbikhanov/garantex_bot/internal/common"
 )
 
 // Response - структура для парсинга ответа API
