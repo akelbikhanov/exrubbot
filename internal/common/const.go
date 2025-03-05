@@ -48,7 +48,7 @@ const (
 	MessageStopNo  = "У вас нет активной подписки." + MessageStopAdd
 	MessageStopYes = "Периодическое получение остановлено." + MessageStopAdd
 	MessageStopAdd = "\nВозобновить: " + CommandRepeat + ", разово: " + CommandPrice
-	MessageError   = "произошла ошибка: %v"
+	MessageError   = "Команда не распознана!"
 )
 
 // Сообщения Garantex

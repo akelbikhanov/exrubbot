@@ -1,4 +1,4 @@
-name: Go CI
+name: CI
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Шаг 2: Настройка Go (с версией 1.24.1)
+      # Шаг 2: Настройка Go (с версией 1.24)
       - name: Setup Go
         uses: actions/setup-go@v5
         with:

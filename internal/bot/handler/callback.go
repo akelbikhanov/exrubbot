@@ -32,7 +32,7 @@ func (h *Handler) callbackHandler(callback *models.CallbackQuery) {
 
 	interval, err := parseInterval(strings.TrimPrefix(callback.Data, "interval:"))
 	if err != nil {
-		EditText(h.ctx, h.b, callback.From.ID, callback.Message.Message.ID, "")
+		EditText(h.ctx, h.b, callback.From.ID, callback.Message.Message.ID, common.MessageError)
 		return
 	}
 
