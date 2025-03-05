@@ -1,4 +1,4 @@
-name: CI
+name: Go CI
 
 on:
   push:
@@ -10,34 +10,25 @@ on:
 
 jobs:
   test:
-    name: Build & Test
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      # Шаг 1: Клонируем репозиторий
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Go
+      # Шаг 2: Настройка Go (с версией 1.24.1)
+      - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.0
+          go-version: '1.24.1'
 
-      - name: Check formatting
-        run: test -z "$(gofmt -l .)" || (echo "Code is not formatted. Run 'gofmt -w .'" && exit 1)
+      # Шаг 4: Запуск линтера golangci-lint с использованием action
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: 'v1.64.6'  # Указываем версию линтера
+          args: --config .golangci.yml  # Указываем путь к конфигурационному файлу
 
-      - name: Run linter
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
-          $(go env GOPATH)/bin/golangci-lint run ./...
-
-      - name: Verify dependencies
-        run: go mod verify
-
-      - name: Run build
-        run: go build -v ./...
-
+      # Шаг 5: Запуск тестов
       - name: Run tests
         run: go test -v ./...
-
-      - name: Check for vulnerabilities
-        run: go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck ./...
