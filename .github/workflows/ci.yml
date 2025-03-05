@@ -20,13 +20,13 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24.1'
+          go-version: '1.24'
 
       # Шаг 4: Запуск линтера golangci-lint с использованием action
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: 'v1.64.6'  # Указываем версию линтера
+          version: 'v1.64'  # Указываем версию линтера
           args: --config .golangci.yml  # Указываем путь к конфигурационному файлу
 
       # Шаг 5: Запуск тестов
