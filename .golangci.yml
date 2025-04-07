@@ -1,39 +1,31 @@
-version: "2"
+version: "2"  # Версия схемы конфигурации. Обязательно для golangci-lint v2+
+
+run:
+  timeout: 2m  # Максимальное время выполнения линтеров (2 минуты)
+  tests: true  # Проверять также *_test.go файлы
 
 linters:
   enable:
-    - govet           # встроенный анализатор Go, must-have
-    - errcheck        # проверка необработанных ошибок
-    - staticcheck     # мощный набор статичных анализаторов
-    - unused          # обнаружение неиспользуемого кода
-    - gocritic        # лучшие практики и предупреждения
-    - revive          # современная альтернатива golint
+    - govet       # Встроенный инструмент Go — проверяет подозрительные конструкции
+    - errcheck    # Проверяет, что ошибки не игнорируются
+    - staticcheck # Расширенный анализатор от Dominik Honnef (совмещает vet, gosimple и др.)
+    - unused      # Ищет неиспользуемые переменные, функции, импорты
+    - gocritic    # Набор best practices и подозрительных конструкций
+    - revive      # Проверка стиля и документации (замена golint)
+
+  exclusions:
+    rules:
+      # Игнорировать некоторые линтеры в тестах
+      - path: '_test\.go'       # Применяется ко всем файлам, заканчивающимся на _test.go
+        linters:
+          - errcheck            # В тестах допустимо игнорировать ошибки
+          - staticcheck         # Некоторые проверки не критичны для тестов
 
 formatters:
   enable:
-    - gofmt           # автоформатирование (простое)
-    - gci             # строгий порядок импортов
-
-run:
-  tests: true
-  timeout: 5m
+    - gofmt  # Проверка форматирования кода как gofmt
+    - gci    # Проверка порядка импортов и их группировки
 
 issues:
-  use-default-excludes: false
-  max-issues-per-linter: 0
-  max-same-issues: 0
-
-exclusions:
-  - path: '_test\.go'
-    linters:
-      - errcheck
-      - staticcheck
-
-  - path: 'internal/.*_gen.go'
-    linters:
-      - all
-
-  - path: 'migrations/.*\.go'
-    linters:
-      - revive
-      - gocritic
+  max-issues-per-linter: 0  # Без ограничения на кол-во ошибок от одного линтера
+  max-same-issues: 0        # Без ограничения на повторяющиеся ошибки
