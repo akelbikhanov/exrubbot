@@ -19,11 +19,11 @@ run:
   timeout: 5m
 
 issues:
-  exclude-use-default: false
+  use-default-excludes: false
   max-issues-per-linter: 0
   max-same-issues: 0
 
-exclude-rules:
+exclusions:
   - path: '_test\.go'
     linters:
       - errcheck
