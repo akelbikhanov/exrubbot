@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/akelbikhanov/garantex_bot/internal/common"
-	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
+	"github.com/akelbikhanov/exrubbot/internal/common"
+	"github.com/akelbikhanov/exrubbot/internal/service/garantex"
 	"github.com/go-telegram/bot/models"
 )
 

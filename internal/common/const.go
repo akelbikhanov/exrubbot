@@ -6,10 +6,10 @@ import (
 
 // Название переменных окружения
 const (
-	EnvBotToken       = "GARANTEX_BOT_TOKEN"
-	EnvDatabaseDSN    = "GARANTEX_DATABASE_DSN"
-	EnvSupportGroupID = "GARANTEX_SUPPORT_GROUP_ID"
-	EnvDebugChannelID = "GARANTEX_DEBUG_CHANNEL_ID"
+	EnvBotToken       = "RUBALERTBOT_TOKEN"
+	EnvDatabaseDSN    = "RUBALERTBOT_DATABASE_DSN"
+	EnvSupportGroupID = "RUBALERTBOT_SUPPORT_GROUP_ID"
+	EnvDebugChannelID = "RUBALERTBOT_DEBUG_CHANNEL_ID"
 	DefaultTimeout    = 5 * time.Second
 )
 
@@ -33,17 +33,17 @@ const (
 
 // Сообщения бота
 const (
-	MessageStart = "Вас приветствует сервис Garantex Notifier!\n\nЯ умею:\n" +
-		"• получать актуальную цену USDT/RUB с Garantex (/price)\n" +
+	MessageStart = "Вас приветствует сервис RubAlert!\n\nЯ умею:\n" +
+		"• получать актуальную цену USDT/RUB с биржи ABCEX (/price)\n" +
 		"• периодически присылать её вам (/repeat)\n\n" +
 		"Для подробностей используйте /help."
 	MessageHelp = "Доступные команды:\n" +
 		CommandStart + " – запуск/описание бота\n" +
 		CommandHelp + " – список доступных команд\n" +
-		CommandPrice + " – получить текущую цену USDT/RUB с Garantex\n" +
+		CommandPrice + " – получить текущую цену USDT/RUB с ABCEX\n" +
 		CommandRepeat + " – периодическое получение цены\n" +
 		CommandStop + " – остановить рассылку"
-	MessagePrice   = "USDT/RUB • Garantex\nask: %.2f RUB (%0.f USDT)\nbid: %.2f RUB (%0.f USDT)\n\n%s MSK (UTC+3)"
+	MessagePrice   = "USDT/RUB • ABCEX\nask: %.2f RUB (%0.f USDT)\nbid: %.2f RUB (%0.f USDT)\n\n%s MSK (UTC+3)"
 	MessageRepeat  = "Выберите интервал получения цен:"
 	MessageStopNo  = "У вас нет активной подписки." + MessageStopAdd
 	MessageStopYes = "Периодическое получение остановлено." + MessageStopAdd
@@ -53,9 +53,9 @@ const (
 
 // Сообщения Garantex
 const (
-	ErrGarantex         = "ошибка при получении цен: "
-	ErrGarantexRequest  = "ошибка запроса к API Garantex: %v"
-	ErrGarantexAPI      = "ошибка API Garantex: код %d"
-	ErrGarantexJSON     = "ошибка декодирования ответа: %v"
-	ErrGarantexNoQuotes = "недостаточно данных в ответе API"
+	ErrABCEX         = "ошибка при получении цен: "
+	ErrABCEXRequest  = "ошибка запроса к API ABCEX: %v"
+	ErrABCEXAPI      = "ошибка API ABCEX: код %d"
+	ErrABCEXJSON     = "ошибка декодирования ответа: %v"
+	ErrABCEXNoQuotes = "недостаточно данных в ответе API"
 )

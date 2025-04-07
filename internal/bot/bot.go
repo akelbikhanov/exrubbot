@@ -7,9 +7,9 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/akelbikhanov/garantex_bot/internal/bot/handler"
-	"github.com/akelbikhanov/garantex_bot/internal/common"
-	"github.com/akelbikhanov/garantex_bot/internal/config"
+	"github.com/akelbikhanov/exrubbot/internal/bot/handler"
+	"github.com/akelbikhanov/exrubbot/internal/common"
+	"github.com/akelbikhanov/exrubbot/internal/config"
 	"github.com/go-telegram/bot"
 )
 

@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/akelbikhanov/garantex_bot/internal/service/garantex"
+	"github.com/akelbikhanov/exrubbot/internal/service/garantex"
 	"github.com/go-telegram/bot"
 )
 

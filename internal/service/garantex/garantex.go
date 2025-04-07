@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/akelbikhanov/garantex_bot/internal/common"
+	"github.com/akelbikhanov/exrubbot/internal/common"
 )
 
 // Response - структура для парсинга ответа API
@@ -26,7 +26,7 @@ type response struct {
 func GetPriceText() string {
 	prices, err := getUSDTPrice()
 	if err != nil {
-		return common.ErrGarantex + err.Error()
+		return common.ErrABCEX + err.Error()
 	}
 
 	return formatMessage(prices)
@@ -34,26 +34,26 @@ func GetPriceText() string {
 
 // getUSDTPrice получает текущий курс USDT/RUB
 func getUSDTPrice() (response, error) {
-	const garantexAPI = "https://garantex.org/api/v2/depth?market=usdtrub"
+	const ABCEXAPI = "https://garantex.org/api/v2/depth?market=usdtrub"
 	var result response
 
 	client := &http.Client{Timeout: common.DefaultTimeout}
-	resp, err := client.Get(garantexAPI)
+	resp, err := client.Get(ABCEXAPI)
 	if err != nil {
-		return result, fmt.Errorf(common.ErrGarantexRequest, err)
+		return result, fmt.Errorf(common.ErrABCEXRequest, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return result, fmt.Errorf(common.ErrGarantexAPI, resp.StatusCode)
+		return result, fmt.Errorf(common.ErrABCEXAPI, resp.StatusCode)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return result, fmt.Errorf(common.ErrGarantexJSON, err)
+		return result, fmt.Errorf(common.ErrABCEXJSON, err)
 	}
 
 	if len(result.Bids) == 0 || len(result.Asks) == 0 {
-		return result, fmt.Errorf(common.ErrGarantexNoQuotes)
+		return result, fmt.Errorf(common.ErrABCEXNoQuotes)
 	}
 
 	return result, nil

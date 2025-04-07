@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/akelbikhanov/garantex_bot/internal/common"
+	"github.com/akelbikhanov/exrubbot/internal/common"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )

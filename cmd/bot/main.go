@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/akelbikhanov/garantex_bot/internal/bot"
-	"github.com/akelbikhanov/garantex_bot/internal/common"
+	"github.com/akelbikhanov/exrubbot/internal/bot"
+	"github.com/akelbikhanov/exrubbot/internal/common"
 )
 
 func main() {
