@@ -1,38 +1,38 @@
-version: '1'
-
-run:
-  timeout: 5m
-  tests: true
+version: "2"
 
 linters:
   enable:
-    - govet
-    - errcheck
-    - staticcheck
-    - unused
-    - gofmt
-    - gocritic
-    - revive        # альтернатива golint
-    - gci           # более строгая работа с импортами
+    - govet           # встроенный анализатор Go, must-have
+    - errcheck        # проверка необработанных ошибок
+    - staticcheck     # мощный набор статичных анализаторов
+    - unused          # обнаружение неиспользуемого кода
+    - gocritic        # лучшие практики и предупреждения
+    - revive          # современная альтернатива golint
+
+formatters:
+  enable:
+    - gofmt           # автоформатирование (простое)
+    - gci             # строгий порядок импортов
+
+run:
+  tests: true
+  timeout: 5m
 
 issues:
+  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
-  exclude-use-default: false
 
 exclude-rules:
-  # Не ругаться на errcheck и staticcheck в тестах
   - path: '_test\.go'
     linters:
       - errcheck
       - staticcheck
 
-  # Исключить ошибки в файлах сгенерированного кода (по шаблону)
   - path: 'internal/.*_gen.go'
     linters:
       - all
 
-  # Исключить ошибки в файлах миграций, если появятся
   - path: 'migrations/.*\.go'
     linters:
       - revive
