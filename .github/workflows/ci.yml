@@ -26,7 +26,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: 'v1.64'  # Указываем версию линтера
+          version: 'v1.60'  # Указываем версию линтера
           args: --config .golangci.yml  # Указываем путь к конфигурационному файлу
 
       # Шаг 5: Запуск тестов
