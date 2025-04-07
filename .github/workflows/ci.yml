@@ -24,7 +24,7 @@ jobs:
 
       # Шаг 4: Запуск линтера golangci-lint с использованием action
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: 'v2.0.2'  # Версия линтера
           args: --config .golangci.yml  # Путь к конфигурационному файлу
