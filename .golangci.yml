@@ -1,4 +1,4 @@
-version: "1"
+version: '1'
 
 run:
   timeout: 5m
@@ -22,18 +22,18 @@ issues:
 
 exclude-rules:
   # Не ругаться на errcheck и staticcheck в тестах
-  - path: _test\.go
+  - path: '_test\.go'
     linters:
       - errcheck
       - staticcheck
 
   # Исключить ошибки в файлах сгенерированного кода (по шаблону)
-  - path: "internal/.*_gen.go"
+  - path: 'internal/.*_gen.go'
     linters:
       - all
 
-  # Пример исключения для файлов миграций, если появятся
-  - path: "migrations/.*\.go"
+  # Исключить ошибки в файлах миграций, если появятся
+  - path: 'migrations/.*\.go'
     linters:
       - revive
       - gocritic
