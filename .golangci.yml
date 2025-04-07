@@ -1,3 +1,9 @@
+version: "1"
+
+run:
+  timeout: 5m
+  tests: true
+
 linters:
   enable:
     - govet
@@ -5,13 +11,29 @@ linters:
     - staticcheck
     - unused
     - gofmt
-    - goimports
     - gocritic
+    - revive        # альтернатива golint
+    - gci           # более строгая работа с импортами
 
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
+  exclude-use-default: false
 
-run:
-  timeout: 5m
-  tests: true
+exclude-rules:
+  # Не ругаться на errcheck и staticcheck в тестах
+  - path: _test\.go
+    linters:
+      - errcheck
+      - staticcheck
+
+  # Исключить ошибки в файлах сгенерированного кода (по шаблону)
+  - path: "internal/.*_gen.go"
+    linters:
+      - all
+
+  # Пример исключения для файлов миграций, если появятся
+  - path: "migrations/.*\.go"
+    linters:
+      - revive
+      - gocritic
