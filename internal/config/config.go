@@ -1,3 +1,4 @@
+// Package config отвечает за загрузку переменных окружения.
 package config
 
 import (

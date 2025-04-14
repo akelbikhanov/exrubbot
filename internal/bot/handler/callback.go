@@ -40,8 +40,8 @@ func (h *Handler) callbackHandler(ctx context.Context, b *bot.Bot, cb *models.Ca
 		return
 	}
 
-	//editText(ctx, b, cb.From.ID, cb.Message.Message.ID, garantex.GetPriceText()+repeatEnding(interval))
-	//h.n.Subscribe(ctx, cb.From.ID, interval)
+	// editText(ctx, b, cb.From.ID, cb.Message.Message.ID, garantex.GetPriceText()+repeatEnding(interval))
+	// h.n.Subscribe(ctx, cb.From.ID, interval)
 }
 
 // parseInterval парсит строку интервала в time.Duration

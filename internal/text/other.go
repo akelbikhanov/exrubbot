@@ -8,6 +8,7 @@ const (
 	EnvDebugChannelID = "EXRUBBOT_DEBUG_CHANNEL_ID"
 )
 
+// Информационные сообщения для логгера
 const (
 	InfoEnvFileNotFound      = ".env файл не найден"
 	InfoUpdateProcessingTime = "update #%d обработан за %s"

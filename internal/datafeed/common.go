@@ -5,6 +5,7 @@ package datafeed
 import (
 	"context"
 	"fmt"
+
 	"github.com/akelbikhanov/exrubbot/internal/text"
 )
 
@@ -20,6 +21,7 @@ type Quote struct {
 type FeedName string
 
 const (
+	// Grinex — идентификатор источника данных Grinex.
 	Grinex FeedName = "Grinex"
 )
 

@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+
 	"github.com/akelbikhanov/exrubbot/internal/logger"
 	"github.com/akelbikhanov/exrubbot/internal/text"
-	"net/http"
 )
 
 // Response - структура для парсинга ответа API

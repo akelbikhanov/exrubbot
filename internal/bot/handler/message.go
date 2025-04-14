@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
-	"github.com/akelbikhanov/exrubbot/internal/datafeed"
 
+	"github.com/akelbikhanov/exrubbot/internal/datafeed"
 	"github.com/akelbikhanov/exrubbot/internal/text"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
