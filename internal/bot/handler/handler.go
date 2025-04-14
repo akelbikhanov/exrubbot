@@ -1,30 +1,26 @@
+// Package handler содержит обработчики запросов от пользователей Telegram.
 package handler
 
 import (
 	"context"
-	"sync"
+	"time"
 
-	"github.com/go-telegram/bot"
+	"github.com/akelbikhanov/exrubbot/internal/notifier"
 )
 
 // Handler отвечает за обработку обновлений и управление подписками.
 type Handler struct {
-	ctx context.Context
-	b   *bot.Bot
-
-	mu            sync.Mutex
-	subscriptions map[int64]*subscription // ключ — chatID
+	n           *notifier.Notifier
+	cancel      context.CancelFunc
+	timeout     time.Duration
+	CancelError error
 }
 
 // New создаёт новый экземпляр Handler с инициализированной мапой подписок.
-func New(ctx context.Context) *Handler {
+func New(cancel context.CancelFunc, timeout time.Duration) *Handler {
 	return &Handler{
-		ctx:           ctx,
-		subscriptions: make(map[int64]*subscription),
+		n:       notifier.New(),
+		cancel:  cancel,
+		timeout: timeout,
 	}
-}
-
-// SetBot устанавливает указатель на инициализированного бота.
-func (h *Handler) SetBot(b *bot.Bot) {
-	h.b = b
 }
