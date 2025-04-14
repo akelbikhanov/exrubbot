@@ -1,12 +1,12 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
 
-	"github.com/akelbikhanov/exrubbot/internal/common"
-	"github.com/akelbikhanov/exrubbot/internal/service/garantex"
+	"github.com/akelbikhanov/exrubbot/internal/text"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )
@@ -27,32 +27,21 @@ var (
 )
 
 // callbackHandler
-func (h *Handler) callbackHandler(callback *models.CallbackQuery) {
-	defer h.answerCallbackQuery(callback.ID)
-
-	interval, err := parseInterval(strings.TrimPrefix(callback.Data, "interval:"))
-	if err != nil {
-		EditText(h.ctx, h.b, callback.From.ID, callback.Message.Message.ID, common.MessageError)
+func (h *Handler) callbackHandler(ctx context.Context, b *bot.Bot, cb *models.CallbackQuery) {
+	if cb == nil {
 		return
 	}
 
-	EditText(h.ctx, h.b, callback.From.ID, callback.Message.Message.ID, garantex.GetPriceText()+repeatEnding(interval))
-	h.Subscribe(callback.From.ID, interval)
-}
+	defer h.answerCallbackQuery(ctx, b, cb.ID)
 
-// answering callback query first to let Telegram know that we received the callback query,
-// and we're handling it. Otherwise, Telegram might retry sending the update repetitively
-// as it thinks the callback query doesn't reach to our application. learn more by
-// reading the footnote of the https://core.telegram.org/bots/api#callbackquery type.
-func (h *Handler) answerCallbackQuery(callbackID string) {
-	_, err := h.b.AnswerCallbackQuery(h.ctx, &bot.AnswerCallbackQueryParams{
-		CallbackQueryID: callbackID,
-		//Text:            "Готово",
-		//ShowAlert:       false,
-	})
+	_, err := parseInterval(strings.TrimPrefix(cb.Data, "interval:"))
 	if err != nil {
-		common.LogError(err)
+		h.editText(ctx, b, cb.From.ID, cb.Message.Message.ID, text.MessageUnknownCommand)
+		return
 	}
+
+	// editText(ctx, b, cb.From.ID, cb.Message.Message.ID, garantex.GetPriceText()+repeatEnding(interval))
+	// h.n.Subscribe(ctx, cb.From.ID, interval)
 }
 
 // parseInterval парсит строку интервала в time.Duration
@@ -69,22 +58,4 @@ func parseInterval(intervalStr string) (time.Duration, error) {
 	default:
 		return 0, fmt.Errorf("неподдерживаемый интервал")
 	}
-}
-
-func repeatEnding(d time.Duration) string {
-	const prefix = "\n" + common.CommandStop + " ⏱"
-	seconds := int64(d.Seconds())
-	if seconds < 60 {
-		return fmt.Sprintf("%s%dс", prefix, seconds)
-	}
-	minutes := int64(d.Minutes())
-	if minutes < 60 {
-		return fmt.Sprintf("%s%dм", prefix, minutes)
-	}
-	hours := int64(d.Hours())
-	if hours < 24 {
-		return fmt.Sprintf("%s%dч", prefix, hours)
-	}
-	days := hours / 24
-	return fmt.Sprintf("%s%dд", prefix, days)
 }

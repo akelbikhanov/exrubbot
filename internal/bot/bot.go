@@ -1,53 +1,63 @@
+// Package bot инициализирует и запускает бота.
 package bot
 
 import (
 	"context"
 	"errors"
-	"os/signal"
 	"sync"
-	"syscall"
 
 	"github.com/akelbikhanov/exrubbot/internal/bot/handler"
-	"github.com/akelbikhanov/exrubbot/internal/common"
 	"github.com/akelbikhanov/exrubbot/internal/config"
+	"github.com/akelbikhanov/exrubbot/internal/logger"
+	"github.com/akelbikhanov/exrubbot/internal/text"
 	"github.com/go-telegram/bot"
 )
 
 var (
-	once    sync.Once
-	initErr error
+	once sync.Once
+	cfg  *config.Config
+	b    *bot.Bot
+	err  error
 )
 
-// Run инициализирует и запускает бота (гарантируя, что он создаётся только один раз)
-// все последующие попытки возвращают ошибку ErrBotAlreadyRunning
-func Run() error {
-	initErr = errors.New(common.ErrBotAlreadyRunning)
+// Run инициализирует и запускает бота в единственном экземпляре.
+func Run(parentCtx context.Context) error {
+	alreadyStarted := true
 
 	once.Do(func() {
-		// Создаём контекст с graceful shutdown
-		ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-		defer cancel()
+		alreadyStarted = false
 
-		h := handler.New(ctx)
-
-		options := []bot.Option{
-			bot.WithCheckInitTimeout(config.Get().DefaultTimeout),
-			bot.WithDefaultHandler(h.DefaultHandler()),
-			bot.WithErrorsHandler(h.ErrorsHandler(cancel, config.Get().DefaultTimeout)),
-		}
-
-		var b *bot.Bot
-		b, initErr = bot.New(config.Get().BotToken, options...)
-		if initErr != nil {
+		if cfg, err = config.Get(); err != nil {
+			logger.Error("", err)
 			return
 		}
 
-		// Передаем ссылку на бота в Handler.
-		h.SetBot(b)
+		ctx, cancel := context.WithCancel(parentCtx)
+		defer cancel()
 
-		// Запускаем бота
+		h := handler.New(cancel, cfg.Timeout)
+
+		options := []bot.Option{
+			bot.WithNotAsyncHandlers(),
+			bot.WithCheckInitTimeout(cfg.Timeout),
+			bot.WithDefaultHandler(h.DefaultHandler()),
+			bot.WithErrorsHandler(h.ErrorHandler()),
+		}
+
+		if b, err = bot.New(cfg.BotToken, options...); err != nil {
+			return
+		}
+
 		b.Start(ctx)
+
+		if h.CancelError != nil {
+			err = h.CancelError
+		}
 	})
 
-	return initErr
+	if alreadyStarted {
+		return errors.New(text.ErrBotAlreadyRunning)
+	}
+
+	return err
 }

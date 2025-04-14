@@ -1,28 +1,36 @@
 package handler
 
 import (
-	"github.com/akelbikhanov/exrubbot/internal/common"
-	"github.com/akelbikhanov/exrubbot/internal/service/garantex"
+	"context"
+
+	"github.com/akelbikhanov/exrubbot/internal/datafeed"
+	"github.com/akelbikhanov/exrubbot/internal/text"
+	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )
 
 // messageHandler
-func (h *Handler) messageHandler(msg *models.Message) {
+func (h *Handler) messageHandler(ctx context.Context, b *bot.Bot, msg *models.Message) {
+	if msg == nil {
+		return
+	}
+
 	switch msg.Text {
-	case common.CommandStart:
-		SendText(h.ctx, h.b, msg.From.ID, common.MessageStart, nil)
-	case common.CommandHelp:
-		SendText(h.ctx, h.b, msg.From.ID, common.MessageHelp, nil)
-	case common.CommandPrice:
-		SendText(h.ctx, h.b, msg.From.ID, garantex.GetPriceText(), nil)
-	case common.CommandRepeat:
-		SendText(h.ctx, h.b, msg.From.ID, common.MessageRepeat, kbRepeat)
-	case common.CommandStop:
-		if h.Unsubscribe(msg.From.ID) {
-			SendText(h.ctx, h.b, msg.From.ID, common.MessageStopYes, nil)
+	case text.CommandStart:
+		h.sendText(ctx, b, msg.From.ID, text.MessageStart, nil)
+	case text.CommandHelp:
+		h.sendText(ctx, b, msg.From.ID, text.MessageHelp, nil)
+	case text.CommandPrice:
+		h.sendQuote(ctx, b, msg.From.ID, datafeed.Grinex, 0)
+	case text.CommandRepeat:
+		h.sendText(ctx, b, msg.From.ID, text.MessageRepeat, kbRepeat)
+	case text.CommandStop:
+		if h.n.Unsubscribe(msg.From.ID) {
+			h.sendText(ctx, b, msg.From.ID, text.MessageStopYes, nil)
 		} else {
-			SendText(h.ctx, h.b, msg.From.ID, common.MessageStopNo, nil)
+			h.sendText(ctx, b, msg.From.ID, text.MessageStopNo, nil)
 		}
 	default:
+		h.sendText(ctx, b, msg.From.ID, text.MessageUnknownCommand, nil)
 	}
 }

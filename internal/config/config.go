@@ -1,46 +1,54 @@
+// Package config отвечает за загрузку переменных окружения.
 package config
 
 import (
 	"fmt"
+	"os"
 	"sync"
-	"syscall"
 	"time"
 
-	"github.com/akelbikhanov/exrubbot/internal/common"
+	"github.com/akelbikhanov/exrubbot/internal/logger"
+	"github.com/akelbikhanov/exrubbot/internal/text"
 	"github.com/joho/godotenv"
 )
 
 // Config - структура для хранения конфигурации приложения
 type Config struct {
-	BotToken       string        // Токен Telegram бота
-	DefaultTimeout time.Duration // Таймаут запросов по умолчанию
+	BotToken string        // Токен Telegram бота
+	Timeout  time.Duration // Таймаут запросов по умолчанию
 }
 
 var (
-	cfg  Config
-	once sync.Once
+	cfg     Config
+	initErr error
+	once    sync.Once
 )
 
 // Get загружает переменные окружения из файла .env (если он есть)
-// а затем пытается их прочесть из ОС
-func Get() *Config {
+// а затем пытается их прочесть из окружения
+func Get() (*Config, error) {
 	once.Do(func() {
-		var (
-			exists bool
-			err    error
-		)
-
-		// подгружаем переменные окружения из файла (если есть)
-		if err = godotenv.Load(); err != nil {
-			common.LogError(fmt.Errorf(common.ErrLoadEnv, err))
+		if err := godotenv.Load(); err != nil {
+			if os.IsNotExist(err) {
+				logger.Info(text.InfoEnvFileNotFound)
+			} else {
+				initErr = fmt.Errorf("%s: %w", text.ErrEnvFileLoad, err)
+				return
+			}
 		}
 
-		cfg.BotToken, exists = syscall.Getenv(common.EnvBotToken)
-		if !exists {
-			common.LogError(fmt.Errorf(common.ErrMissingEnvVar, common.EnvBotToken))
+		cfg.BotToken = os.Getenv(text.EnvBotToken)
+		if cfg.BotToken == "" {
+			initErr = fmt.Errorf("%s '%s'", text.ErrEnvMissingVar, text.EnvBotToken)
+			return
 		}
 
-		cfg.DefaultTimeout = common.DefaultTimeout
+		cfg.Timeout = 5 * time.Second
 	})
-	return &cfg
+
+	if initErr != nil {
+		return nil, initErr
+	}
+
+	return &cfg, nil
 }
