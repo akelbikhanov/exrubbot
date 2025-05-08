@@ -1,0 +1,20 @@
+# Общее поведение — LF
+* cm=auto eol=lf
+
+# Явно указать текстовые файлы
+*.go cm
+*.mod cm
+*.sum cm
+*.md cm
+*.yaml cm
+*.yml cm
+*.sh cm eol=lf
+*.bat cm eol=crlf
+
+# Игнорировать преобразования для бинарников
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.pdf binary

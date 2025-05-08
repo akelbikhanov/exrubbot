@@ -1,0 +1,41 @@
+# IDE
+.idea/
+.vscode/
+
+# Git
+.git
+.gitignore
+
+# Документация
+*.md
+
+# Конфигурации
+.env
+*.env
+
+# Артефакты сборки
+*.out
+*.log
+*.test
+**/bin/
+**/debug/
+
+# Временные файлы
+*.tmp
+*.swp
+/tmp/
+
+# Кеш линтера
+.golangci-lint.cache
+coverage.*
+
+# Docker служебные файлы
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.override.yml
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+ehthumbs.db

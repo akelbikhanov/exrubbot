@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exrubbot
+  namespace: exrubbot-prod
+  labels:
+    app: exrubbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exrubbot
+  template:
+    metadata:
+      labels:
+        app: exrubbot
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: exrubbot
+          image: ghcr.io/akelbikhanov/exrubbot:v1.0.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: EXRUBBOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: exrubbot-secrets
+                  key: EXRUBBOT_TOKEN
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
