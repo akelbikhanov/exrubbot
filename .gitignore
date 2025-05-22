@@ -29,3 +29,7 @@ docker-compose.override.yml
 .DS_Store
 Thumbs.db
 ehthumbs.db
+
+# Бинарники terraform
+.terraform/
+terraform.tfvars

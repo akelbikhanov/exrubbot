@@ -1,12 +1,15 @@
-name: CI
+# .github/workflows/lint-test-ci.yml
+name: Lint & Test Application
 
 on:
   push:
     branches:
       - main
+      - staging
   pull_request:
     branches:
       - main
+      - staging
 
 jobs:
   test:
