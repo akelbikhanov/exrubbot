@@ -1,6 +1,5 @@
 # .github/workflows/lint-test-ci.yml
 name: Lint & Test Application
-
 on:
   push:
     branches:
@@ -10,28 +9,20 @@ on:
     branches:
       - main
       - staging
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Клонируем репозиторий
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # Шаг 2: Настройка Go (с версией 1.24)
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.24.2'
-
-      # Шаг 4: Запуск линтера golangci-lint с использованием action
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
-          version: 'v2.1.6'  # Версия линтера
-          args: --config .golangci.yml  # Путь к конфигурационному файлу
-
-      # Шаг 5: Запуск тестов
+          version: 'v2.1.6'
+          args: --config .golangci.yml
       - name: Run tests
         run: go test -v ./...
