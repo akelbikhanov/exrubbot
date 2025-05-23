@@ -75,7 +75,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: 'go'
+          cache: true
+          cache-dependency-path: '**/go.sum'
 
       # выполнить тесты
       - run: go test -v ./...
