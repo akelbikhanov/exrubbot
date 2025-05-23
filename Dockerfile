@@ -1,29 +1,35 @@
-# Этап 1: Сборка приложения
-FROM golang:1.24 AS builder
+# builder stage: используем свежий golang:alpine для компиляции
+FROM golang:alpine AS builder
 
-
+# рабочая директория внутри контейнера-билдера
 WORKDIR /app
 
-# Кэширование зависимостей
+# копируем модули отдельно, чтобы кэшировать зависимости
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Копируем весь исходный код
+# копируем остальной исходный код
 COPY . .
 
-# Сборка бинарника
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o exrubbot ./cmd/bot/
+# компилируем статический бинарь для linux/amd64, убираем debug-символы
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags="-s -w" -o /usr/local/bin/exrubbot ./cmd/bot
 
-# Этап 2: Минимальный контейнер для запуска
-FROM alpine:latest
+# stage для корневых сертификатов (Alpine минимального размера)
+FROM alpine:latest AS certs
+RUN apk add --no-cache ca-certificates
 
-# Установка SSL-сертификатов для https (очень важно для телеграмм бота!)
-RUN apk --no-cache add ca-certificates
+# финальный минимальный слой (scratch)
+FROM scratch
 
-WORKDIR /app
+# добавляем сертификаты для HTTPS-запросов
+COPY --from=certs /etc/ssl/certs /etc/ssl/certs
 
-# Копируем только бинарник из предыдущего этапа
-COPY --from=builder /app/exrubbot .
+# добавляем скомпилированный бинарь в каталог, который уже в $PATH
+COPY --from=builder /usr/local/bin/exrubbot /usr/local/bin/exrubbot
 
-# Запуск приложения
-CMD ["./exrubbot"]
+# запускаем под непривилегированным пользователем
+USER 65532:65532
+
+# точка входа контейнера
+ENTRYPOINT ["exrubbot"]

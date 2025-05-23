@@ -1,0 +1,82 @@
+# .github/workflows/CI.yml
+name: CI
+
+# триггеры запуска: пуш в ветки и теги, PR в ветки
+on:
+  push:
+    branches: [main, staging]
+    tags: ['*']
+  pull_request:
+    branches: [main, staging]
+
+# глобальные переменные
+env:
+  GO_VERSION: '1.24.3'
+  LINT_VERSION: 'v2.1.6'
+
+# права workflow
+permissions:
+  contents: read
+
+# отмена старых прогонов на тот же ref
+# "CI-refs/heads/main"
+# "CI-refs/tags/v1.2.3"
+# "CI-refs/pull/42/merge"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # проверка кода линтером
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      # получить код
+      - uses: actions/checkout@v4
+
+      # установить Go
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      # кэш модулей Go и кэш сборки
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
+
+      # кэш golangci-lint
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/golangci-lint
+          key: ${{ runner.os }}-golangci-${{ env.LINT_VERSION }}-${{ hashFiles('.golangci.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-golangci-${{ env.LINT_VERSION }}-
+
+      # запуск линтера
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: ${{ env.LINT_VERSION }}
+          args: --config .golangci.yml
+
+  # запуск тестов
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      # получить код
+      - uses: actions/checkout@v4
+
+      # установить Go и кэшировать модули
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+          cache-dependency-path: '**/go.sum'
+
+      # выполнить тесты
+      - run: go test -v ./...
