@@ -17,11 +17,10 @@ concurrency:
 jobs:
   build-and-push:
     if: >
-      github.event_name == 'workflow_run' &&
-      github.event.workflow_run.name == 'CI' &&
       github.event.workflow_run.conclusion == 'success' &&
       startsWith(github.ref_name, 'v')
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       # получаем точный коммит по тегу
       - name: Checkout source
@@ -50,8 +49,8 @@ jobs:
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          sbom: true
-          provenance: mode=max
+          sbom: false
+          provenance: false
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.ref_name }}
             ghcr.io/${{ github.repository }}:latest

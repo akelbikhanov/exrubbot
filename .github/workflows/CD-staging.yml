@@ -21,6 +21,7 @@ jobs:
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.head_branch == 'staging'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -45,8 +46,8 @@ jobs:
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          sbom: true
-          provenance: mode=max
+          sbom: false
+          provenance: false
           tags: |
             ghcr.io/${{ github.repository }}:staging-${{ github.event.workflow_run.head_sha }}
             ghcr.io/${{ github.repository }}:staging
