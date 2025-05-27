@@ -51,7 +51,7 @@ jobs:
         uses: golangci/golangci-lint-action@v8
         with:
           version: ${{ env.LINT_VERSION }}
-          args: --config .golangci.yml --parallel=4
+          args: --config .golangci.yml --concurrency 4
 
   # запуск тестов
   test:
