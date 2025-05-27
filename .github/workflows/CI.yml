@@ -12,12 +12,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  # CI-refs/heads/main
-  # CI-refs/pull/123/head
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   lint:
     runs-on: ubuntu-latest
