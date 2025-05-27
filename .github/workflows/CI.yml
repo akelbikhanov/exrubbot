@@ -1,77 +1,55 @@
 # .github/workflows/CI.yml
 name: CI
 
-# триггеры запуска: пуш в ветки и теги, PR в ветки
 on:
   push:
-    branches: [main, staging]
-    tags: ['*']
+    branches: [main]
+    tags-ignore: ['*']
   pull_request:
-    branches: [main, staging]
+    branches: [main]
 
-# глобальные переменные
-env:
-  LINT_VERSION: 'v2.1.6'
-
-# права workflow
 permissions:
   contents: read
 
-# отмена старых прогонов на тот же ref
-# "CI-refs/heads/main"
-# "CI-refs/tags/v1.2.3"
-# "CI-refs/pull/42/merge"
 concurrency:
+  # CI-refs/heads/main
+  # CI-refs/pull/123/head
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # проверка кода линтером
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      # получить код
       - name: Checkout sources
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
-      # Кэш Go-модулей
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-mod-
-
-      # запуск линтера
-      - name: Run linters
-        uses: golangci/golangci-lint-action@v8
-        with:
-          version: ${{ env.LINT_VERSION }}
-          args: --config .golangci.yml --concurrency 4
-
-  # запуск тестов
-  test:
-    needs: lint
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      # получить код
-      - name: Checkout sources
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      # установить Go и кэшировать модули
       - name: Setup Go & cache modules
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
           cache: true
+      - name: Run linters
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+          args: --config .golangci.yml --concurrency 4
 
-      # выполнить тесты
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Go & cache modules
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
       - name: Run tests
         run: go test -v ./...

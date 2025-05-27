@@ -1,5 +1,5 @@
-# .github/workflows/cleanup-images.yml
-name: cleanup-images
+# .github/workflows/staging-cleanup.yml
+name: staging-cleanup
 on:
   schedule:
     - cron: '0 0 * * *' # Ежедневно в 00:00 UTC
@@ -9,29 +9,32 @@ permissions:
   packages: write
 
 jobs:
-  cleanup-staging:
+  cleanup-others:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete old staging images
-        uses: actions/delete-package-versions@v5
+      - uses: actions/delete-package-versions@v5
         with:
           package-name: ${{ github.repository }}
           package-type: container
-          min-versions-to-keep: 5
+          min-versions-to-keep: 0
+          # сохраняем только latest, релизы и staging-версии
           ignore-versions: |
             ^latest$
             ^v\d+\.\d+\.\d+(-.+)?$
+            ^staging-[0-9a-f]+$
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  cleanup-stable:
+  cleanup-staging:
+    needs: cleanup-others
     runs-on: ubuntu-latest
     steps:
-      - name: Delete old stable images
-        uses: actions/delete-package-versions@v5
+      - uses: actions/delete-package-versions@v5
         with:
           package-name: ${{ github.repository }}
           package-type: container
           min-versions-to-keep: 5
+          # теперь из staging-* оставляем только 5 последних
           ignore-versions: |
-            ^staging.*$
+            ^latest$
+            ^v\d+\.\d+\.\d+(-.+)?$
           token: ${{ secrets.GITHUB_TOKEN }}
