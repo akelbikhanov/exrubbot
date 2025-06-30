@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/delete-package-versions@v5
         with:
-          package-name: ${{ github.repository_name }}
+          package-name: ${{ github.event.repository.name }}
           package-type: container
           min-versions-to-keep: 0
           # сохраняем только latest, релизы и staging-версии
@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/delete-package-versions@v5
         with:
-          package-name: ${{ github.repository_name }}
+          package-name: ${{ github.event.repository.name }}
           package-type: container
           min-versions-to-keep: 5
           # теперь из staging-* оставляем только 5 последних
