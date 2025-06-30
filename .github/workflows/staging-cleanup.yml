@@ -9,23 +9,7 @@ permissions:
   packages: write
 
 jobs:
-  cleanup-others:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/delete-package-versions@v5
-        with:
-          package-name: exrubbot
-          package-type: container
-          min-versions-to-keep: 0
-          # сохраняем только latest, релизы и staging-версии
-          ignore-versions: |
-            ^latest$
-            ^v\d+\.\d+\.\d+(-.+)?$
-            ^staging-[0-9a-f]+$
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-  cleanup-staging:
-    needs: cleanup-others
+  staging-cleanup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/delete-package-versions@v5
@@ -33,7 +17,6 @@ jobs:
           package-name: exrubbot
           package-type: container
           min-versions-to-keep: 5
-          # теперь из staging-* оставляем только 5 последних
           ignore-versions: |
             ^latest$
             ^v\d+\.\d+\.\d+(-.+)?$
