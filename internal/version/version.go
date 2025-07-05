@@ -8,7 +8,7 @@ import (
 
 var (
 	// Заполняется при сборке через ldflags
-	version   = "dev"
+	version   = "unknown"
 	gitCommit = "unknown"
 	buildTime = "unknown"
 	goVersion = runtime.Version()
