@@ -36,6 +36,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "build_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
       - name: Build & push image
         uses: docker/build-push-action@v6
         with:
@@ -49,7 +52,7 @@ jobs:
           build-args: |
             VERSION=${{ github.event.release.tag_name }}
             GIT_COMMIT=${{ github.sha }}
-            BUILD_TIME=${{ github.run_started_at }}
+            BUILD_TIME=${{ steps.timestamp.outputs.build_time }}
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
             ghcr.io/${{ github.repository }}:latest

@@ -36,7 +36,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate timestamp from run start
         id: timestamp
-        run: echo "timestamp=$(date -d '${{ github.run_started_at }}' +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+        run: |
+          echo "build_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+          echo "formatted=$(date -u +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
       - name: Build & push image
         uses: docker/build-push-action@v6
         with:
@@ -48,8 +50,8 @@ jobs:
           sbom: false
           provenance: false
           build-args: |
-            VERSION=staging-${{ steps.timestamp.outputs.timestamp }}
+            VERSION=staging-${{ steps.timestamp.outputs.formatted }}
             GIT_COMMIT=${{ github.sha }}
-            BUILD_TIME=${{ github.run_started_at }}
+            BUILD_TIME=${{ steps.timestamp.outputs.build_time }}
           tags: |
-            ghcr.io/${{ github.repository }}:staging-${{ steps.timestamp.outputs.timestamp }}
+            ghcr.io/${{ github.repository }}:staging-${{ steps.timestamp.outputs.formatted }}
