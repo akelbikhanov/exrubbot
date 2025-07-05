@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/akelbikhanov/exrubbot/internal/text"
+	"github.com/akelbikhanov/exrubbot/internal/version"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )
@@ -13,6 +14,8 @@ func (h *Handler) handlerMessage(ctx context.Context, b *bot.Bot, msg *models.Me
 	switch msg.Text {
 	case text.CommandStart:
 		h.sendText(ctx, b, msg.From.ID, text.MessageStart, nil)
+	case text.CommandVersion:
+		h.sendText(ctx, b, msg.From.ID, version.Short(), nil)
 	case text.CommandQuote:
 		h.sendFeeds(ctx, b, msg.From.ID)
 	case text.CommandStop:

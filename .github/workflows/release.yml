@@ -46,6 +46,10 @@ jobs:
           cache-to: type=gha,mode=max
           sbom: false
           provenance: false
+          build-args: |
+            VERSION=${{ github.event.release.tag_name }}
+            GIT_COMMIT=${{ github.sha }}
+            BUILD_TIME=${{ github.run_started_at }}
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
             ghcr.io/${{ github.repository }}:latest

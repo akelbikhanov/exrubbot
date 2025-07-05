@@ -1,6 +1,11 @@
 # builder stage: используем свежий golang:alpine для компиляции
 FROM golang:alpine AS builder
 
+# Build arguments для версии
+ARG VERSION=unknown
+ARG GIT_COMMIT=unknown
+ARG BUILD_TIME=unknown
+
 # рабочая директория внутри контейнера-билдера
 WORKDIR /app
 
@@ -13,7 +18,12 @@ COPY . .
 
 # компилируем статический бинарь для linux/amd64, убираем debug-символы
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -ldflags="-s -w" -o /usr/local/bin/exrubbot ./cmd/bot
+   go build \
+   -ldflags="-s -w \
+       -X 'internal/version.version=${VERSION}' \
+       -X 'internal/version.gitCommit=${GIT_COMMIT}' \
+       -X 'internal/version.buildTime=${BUILD_TIME}'" \
+   -o /usr/local/bin/exrubbot ./cmd/bot
 
 # stage для корневых сертификатов (Alpine минимального размера)
 FROM alpine:latest AS certs
