@@ -2,9 +2,10 @@ package text
 
 // Команды бота.
 const (
-	CommandStart = "/start"
-	CommandQuote = "/quote"
-	CommandStop  = "/stop"
+	CommandStart   = "/start"
+	CommandQuote   = "/quote"
+	CommandStop    = "/stop"
+	CommandVersion = "/version"
 )
 
 // Элементы (составные части) callback-команд.
