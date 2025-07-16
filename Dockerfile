@@ -23,7 +23,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
        -X 'github.com/akelbikhanov/exrubbot/internal/version.version=${VERSION}' \
        -X 'github.com/akelbikhanov/exrubbot/internal/version.gitCommit=${GIT_COMMIT}' \
        -X 'github.com/akelbikhanov/exrubbot/internal/version.buildTime=${BUILD_TIME}'" \
-   -o /usr/local/bin/exrubbot ./cmd/bot
+   -o /usr/local/bin/exrubbot ./cmd/exrubbot
 
 # stage для корневых сертификатов (Alpine минимального размера)
 FROM alpine:latest AS certs

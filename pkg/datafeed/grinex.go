@@ -3,7 +3,6 @@ package datafeed
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -53,14 +52,7 @@ func (f *grinexFeed) GetQuote(ctx context.Context) (entity.Quote, error) {
 	// Выполняем HTTP-запрос.
 	resp, err := f.hc.Do(req)
 	if err != nil {
-		switch {
-		case errors.Is(err, context.DeadlineExceeded):
-			return entity.Quote{}, fmt.Errorf("%s: %w", text.ErrRequestTimeout, err)
-		case errors.Is(err, context.Canceled):
-			return entity.Quote{}, fmt.Errorf(text.ErrRequestCancelled)
-		default:
-			return entity.Quote{}, fmt.Errorf("%s: %w", text.ErrRequestSend, err)
-		}
+		return entity.Quote{}, fmt.Errorf("%s: %w", text.ErrRequestSend, err)
 	}
 
 	// Проверяем код ответа.

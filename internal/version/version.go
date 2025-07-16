@@ -1,4 +1,4 @@
-// Package version предоставляет информацию о сборке приложения.
+// Package version предоставляет информацию о версии приложения.
 package version
 
 import (
@@ -7,20 +7,20 @@ import (
 )
 
 var (
-	// Заполняется при сборке через ldflags
-	version   = "unknown"
-	gitCommit = "unknown"
-	buildTime = "unknown"
+	// Заполняется при сборке образа, через ldflags
+	name      = "exrubbot"
+	version   = "unknown_version"
+	gitCommit = "unknown_hash"
+	buildTime = "unknown_time"
 	goVersion = runtime.Version()
 )
 
-// Short возвращает краткую версию приложения
-func Short() string {
-	return fmt.Sprintf("%s, %s", version, goVersion)
-}
+// GetVersion возвращает версию приложения
+// За основу взят вывод версии из утилиты golangci-lint:
+// golangci-lint has version 2.2.2 built with go1.24.4 from e9d42511 on 2025-07-11T12:00:50Z
+func GetVersion() string {
+	shortCommit := gitCommit[:8]
 
-// Full возвращает полную информацию о версии
-func Full() string {
-	return fmt.Sprintf("Version: %s\nCommit: %s\nBuild: %s\nGo: %s\n",
-		version, gitCommit, buildTime, goVersion)
+	return fmt.Sprintf("%s has version %s built with %s from %s on %s",
+		name, version, goVersion, shortCommit, buildTime)
 }
