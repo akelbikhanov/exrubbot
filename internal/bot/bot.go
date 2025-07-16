@@ -1,88 +1,50 @@
-// Package bot инициализирует и запускает бота.
+// Package bot содержит основную логику работы приложения (оркестратор).
 package bot
 
 import (
 	"context"
-	"errors"
+	"log/slog"
 	"net/http"
-	"sync"
+	"time"
 
-	"github.com/akelbikhanov/exrubbot/internal/bot/handler"
-	"github.com/akelbikhanov/exrubbot/internal/config"
-	"github.com/akelbikhanov/exrubbot/internal/text"
+	"github.com/akelbikhanov/exrubbot/internal/scheduler"
+	"github.com/akelbikhanov/exrubbot/internal/storage"
 	"github.com/akelbikhanov/exrubbot/pkg/datafeed"
-	"github.com/akelbikhanov/exrubbot/pkg/logger"
-	"github.com/go-telegram/bot"
+	"github.com/akelbikhanov/exrubbot/pkg/entity"
 )
 
-var (
-	once sync.Once
-)
-
-// RunOnce - singleton обвязка.
-func RunOnce(ctx context.Context) (err error) {
-	alreadyStarted := true
-	defer func() {
-		if alreadyStarted {
-			err = errors.New(text.ErrBotAlreadyRunning)
-		}
-	}()
-
-	once.Do(func() {
-		alreadyStarted = false
-
-		err = run(ctx)
-	})
-
-	return err
+// Bot координирует работу всех компонентов.
+type Bot struct {
+	logger     *slog.Logger
+	storage    storage.Storage
+	scheduler  *scheduler.Scheduler
+	feeds      map[string]entity.Feed
+	retryDelay time.Duration
+	stop       context.CancelFunc
+	StopError  error
 }
 
-// run инициализирует и запускает бота.
-func run(parentCtx context.Context) error {
-	ctx, cancel := context.WithCancel(parentCtx)
-	defer cancel()
+// Options параметры для создания бота.
+type Options struct {
+	Logger     *slog.Logger
+	Storage    storage.Storage
+	FeedClient *http.Client
+	RetryDelay time.Duration
+	Stop       context.CancelFunc
+}
 
-	var (
-		cfg *config.Config
-		b   *bot.Bot
-		err error
-	)
-
-	l := logger.NewStdout()
-
-	if cfg, err = config.Get(l); err != nil {
-		l.Error("", err, 1)
-		return err
+// New создаёт новый экземпляр бота.
+func New(opts Options) *Bot {
+	if opts.RetryDelay <= 0 {
+		opts.RetryDelay = 5 * time.Second
 	}
 
-	tr := &http.Transport{}
-	botClient := &http.Client{
-		Timeout:   cfg.BotTimeout,
-		Transport: tr,
+	return &Bot{
+		logger:     opts.Logger,
+		storage:    opts.Storage,
+		scheduler:  scheduler.New(opts.Logger),
+		feeds:      datafeed.RegisterFeeds(opts.FeedClient),
+		retryDelay: opts.RetryDelay,
+		stop:       opts.Stop,
 	}
-	feedClient := &http.Client{
-		Timeout:   cfg.FeedTimeout,
-		Transport: tr,
-	}
-
-	f := datafeed.RegisterFeeds(feedClient)
-	h := handler.New(l, f, cfg.BotRetry, cancel)
-
-	options := []bot.Option{
-		bot.WithHTTPClient(cfg.BotTimeout, botClient),
-		bot.WithNotAsyncHandlers(),
-		bot.WithDefaultHandler(h.DefaultHandler()),
-		bot.WithErrorsHandler(h.ErrorHandler()),
-	}
-
-	if b, err = bot.New(cfg.BotToken, options...); err != nil {
-		return err
-	}
-
-	b.Start(ctx)
-
-	if h.TerminateReason != nil {
-		err = h.TerminateReason
-	}
-	return err
 }
