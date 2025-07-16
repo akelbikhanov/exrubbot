@@ -46,6 +46,7 @@ func (b *Bot) RestoreSubscriptions(ctx context.Context, bot *tg.Bot) {
 	b.logger.Info(fmt.Sprintf(text.LogInfoSubsRestored, restored, skipped))
 }
 
+// SaveSubscriptions по таймеру запускает сохранение действующих подписок.
 func (b *Bot) SaveSubscriptions(ctx context.Context) {
 	const saveInterval = 5 * time.Minute
 	ticker := time.NewTicker(saveInterval)
@@ -62,6 +63,7 @@ func (b *Bot) SaveSubscriptions(ctx context.Context) {
 	}
 }
 
+// saveSubscriptions сохраняет действующие подписки.
 func (b *Bot) saveSubscriptions() {
 	subs := b.scheduler.GetSubscriptions()
 	if err := b.storage.Save(subs); err != nil {

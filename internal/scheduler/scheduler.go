@@ -88,7 +88,7 @@ func (s *Scheduler) Unsubscribe(chatID int64) bool {
 	delete(s.subs, chatID)
 
 	// Логируем остановку задачи/планировщика
-	s.logger.Debug(fmt.Sprintf(text.LogDebugSchedulerStop, chatID))
+	s.logger.Debug(text.LogDebugSchedulerStop, text.LogFieldChatID, chatID)
 
 	return true
 }

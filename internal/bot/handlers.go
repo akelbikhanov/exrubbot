@@ -18,7 +18,9 @@ import (
 // HandleUpdate обрабатывает входящие обновления от Telegram.
 func (b *Bot) HandleUpdate(ctx context.Context, bot *tg.Bot, update *models.Update) {
 	start := time.Now()
-	defer b.logger.Debug(fmt.Sprintf(text.LogDebugUpdateProcessed, update.ID, time.Since(start)))
+	defer func() {
+		b.logger.Debug(fmt.Sprintf(text.LogDebugUpdateProcessed, update.ID, time.Since(start)))
+	}()
 
 	switch {
 	case update.Message != nil:

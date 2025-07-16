@@ -9,14 +9,6 @@ const (
 		"-4 debug, 0 info (default), 4 warn, 8 error"
 )
 
-const (
-	DescLogLevel1 = "set the logging level, for example:\n" +
-		"-log-level -4	debug\n" +
-		"-log-level 0	info (default)\n" +
-		"-log-level 4	warn\n" +
-		"-log-level 8	error"
-)
-
 // Переменные окружения
 const (
 	EnvBotToken    = "EXRUBBOT_TOKEN"
