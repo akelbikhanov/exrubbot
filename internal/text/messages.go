@@ -21,6 +21,6 @@ const (
 	QuoteHeader     = "USDT/RUB • "
 	QuoteError      = "\nОшибка получения котировки"
 	QuoteStopHint   = "\n" + CmdStop + " ⏱%s"
-	QuoteTimeFormat = "02.01.2006 15:04:05 MSK"
+	QuoteTimeFormat = "2006.01.02 15:04:05 MSK (UTC +3)"
 	QuoteTimeZone   = "MSK"
 )

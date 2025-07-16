@@ -86,7 +86,7 @@ func (b *Bot) createSendFunc(ctx context.Context, bot *tg.Bot, sub entity.Subscr
 		}
 
 		// добавляем московское время
-		msg.WriteString("\n")
+		msg.WriteString("\n\n")
 		msg.WriteString(formatTimeMSK())
 
 		// добавляем подпись "/stop ⏱..."
