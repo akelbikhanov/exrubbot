@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  contents: read
   packages: write
 
 jobs:
@@ -18,6 +19,6 @@ jobs:
           package-type: 'container'
           min-versions-to-keep: 5
           ignore-versions: |
-            ^latest$
-            ^v\d+\.\d+\.\d+$
-          #token: ${{ secrets.GITHUB_TOKEN }}
+            '^latest$'
+            '^v\d+\.\d+\.\d+$'
+          token: ${{ secrets.GITHUB_TOKEN }}
