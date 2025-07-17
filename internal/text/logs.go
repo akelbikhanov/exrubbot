@@ -68,6 +68,7 @@ const (
 	ErrStorageSync    = "синхронизация файла: %w"
 	ErrStorageClose   = "закрытие файла: %w"
 	ErrStorageRename  = "переименование файла: %w"
+	ErrStorageDir     = "создание директории: %w"
 )
 
 // Ошибки конфигурации

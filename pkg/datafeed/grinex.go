@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	grinexID     = "grinex"
-	grinexName   = "Grinex"
-	grinexAPIURL = "https://grinex.io/api/v2/depth?market=usdta7a5"
+	grinexID     = "usdtrub_grinex"
+	grinexName   = "USDT/RUB • Grinex"
+	grinexAPIURL = "https://grinex.io/api/v2/depth?market=usdtrub"
 )
 
 // grinexFeed реализует интерфейс entity.Feed.

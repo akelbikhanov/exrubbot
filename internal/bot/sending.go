@@ -71,7 +71,6 @@ func (b *Bot) createSendFunc(ctx context.Context, bot *tg.Bot, sub entity.Subscr
 	return func() {
 		// строим ответ с котировкой
 		var msg strings.Builder
-		msg.WriteString(text.QuoteHeader)
 		msg.WriteString(feed.Name())
 
 		quote, err := feed.GetQuote(ctx)
