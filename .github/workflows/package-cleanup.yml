@@ -1,0 +1,27 @@
+# .github/workflows/package-cleanup.yml
+
+# !!! Игнорирование версий в образах GHCR не работает!
+# https://github.com/actions/delete-package-versions/issues/88
+# Из-за этого пайплайн работает некорректно, удаляя и semver тоже
+# Пока не починят, запуск пайплайна доступен только в ручном режиме
+
+name: staging-cleanup
+on:
+  #schedule:
+  #  - cron: '0 0 * * *' # Ежедневно в 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  packages: write
+
+jobs:
+  staging-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'exrubbot'
+          package-type: 'container'
+          min-versions-to-keep: 5
+          ignore-versions: '^v[0-9]+\.[0-9]+\.[0-9]+.*$'
+          token: ${{ secrets.GITHUB_TOKEN }}
