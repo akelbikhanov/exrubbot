@@ -5,6 +5,7 @@
 # Конфигурации
 .env*
 *.env
+!.env.example  # Пример конфига можно коммитить
 
 # Артефакты сборки
 *.out
@@ -12,15 +13,31 @@
 *.test
 **/bin/
 **/debug/
+*.exe
 
-# Кеш линтера
+# Go specific
+vendor/
+go.work
+go.work.sum
+
+# Кеш линтера и тестов
 .golangci-lint.cache
 coverage.*
+*.cover
+*.prof
 
 # Временные файлы
 *.tmp
 *.swp
+*.swo
 /tmp/
+/temp/
+/.tmp/
+
+# Локальные данные
+/data/
+/var/
+subscribers.json
 
 # Docker
 docker-compose.override.yml
@@ -30,6 +47,6 @@ docker-compose.override.yml
 Thumbs.db
 ehthumbs.db
 
-# Бинарники terraform
+# Terraform
 .terraform/
 terraform.tfvars

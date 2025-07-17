@@ -75,11 +75,16 @@ func (f *FileStorage) Save(items []entity.Subscription) error {
 		return fmt.Errorf(text.ErrStorageMarshal, err)
 	}
 
-	// Создаём временный файл в той же директории
+	// Создаём директорию, если не существует
 	dir := filepath.Dir(f.filePath)
-	tmp, err1 := os.CreateTemp(dir, text.StorageTempPattern)
-	if err1 != nil {
-		return fmt.Errorf(text.ErrStorageTemp, err1)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf(text.ErrStorageDir, err)
+	}
+
+	// Создаём временный файл в той же директории
+	tmp, err := os.CreateTemp(dir, text.StorageTempPattern)
+	if err != nil {
+		return fmt.Errorf(text.ErrStorageTemp, err)
 	}
 	tmpPath := tmp.Name()
 
