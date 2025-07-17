@@ -14,10 +14,8 @@ jobs:
     steps:
       - uses: actions/delete-package-versions@v5
         with:
-          package-name: exrubbot
-          package-type: container
+          package-name: 'exrubbot'
+          package-type: 'container'
           min-versions-to-keep: 5
-          ignore-versions: |
-            ^latest$
-            ^v\d+\.\d+\.\d+(-.+)?$
-          token: ${{ secrets.GITHUB_TOKEN }}
+          delete-only-untagged-versions: 'true'
+          #token: ${{ secrets.GITHUB_TOKEN }}
