@@ -9,14 +9,9 @@ import (
 
 // RegisterFeeds возвращает список всех зарегистрированных поставщиков данных.
 func RegisterFeeds(hc *http.Client) map[string]entity.Feed {
-	feeds := []entity.Feed{
+	return map[string]entity.Feed{
 		// NewABCEX(hc),
-		NewGrinex(hc),
+		grinexRubID:  NewGrinex(hc, grinexRubID, grinexRubName, grinexRubAPIURL),
+		grinexA7A5ID: NewGrinex(hc, grinexA7A5ID, grinexA7A5Name, grinexA7A5APIURL),
 	}
-
-	result := make(map[string]entity.Feed, len(feeds))
-	for _, feed := range feeds {
-		result[feed.ID()] = feed
-	}
-	return result
 }
