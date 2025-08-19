@@ -11,32 +11,42 @@ import (
 )
 
 const (
-	grinexID     = "usdtrub_grinex"
-	grinexName   = "USDT/RUB • Grinex"
-	grinexAPIURL = "https://grinex.io/api/v2/depth?market=usdtrub"
+	grinexRubID     = "usdtrub_grinex"
+	grinexRubName   = "USDT/RUB • Grinex"
+	grinexRubAPIURL = "https://grinex.io/api/v2/depth?market=usdtrub"
+
+	grinexA7A5ID     = "usdta7a5_grinex"
+	grinexA7A5Name   = "USDT/A7A5 • Grinex"
+	grinexA7A5APIURL = "https://grinex.io/api/v2/depth?market=usdta7a5"
 )
 
 // grinexFeed реализует интерфейс entity.Feed.
 // Поддерживается только пара USDT/RUB.
 type grinexFeed struct {
-	hc *http.Client
+	hc   *http.Client
+	id   string
+	name string
+	url  string
 }
 
 // NewGrinex возвращает экземпляр grinexFeed.
-func NewGrinex(hc *http.Client) entity.Feed {
+func NewGrinex(hc *http.Client, id, name, url string) entity.Feed {
 	return &grinexFeed{
-		hc: hc,
+		hc:   hc,
+		id:   id,
+		name: name,
+		url:  url,
 	}
 }
 
 // Name возвращает название источника данных.
 func (f *grinexFeed) Name() string {
-	return grinexName
+	return f.name
 }
 
 // ID возвращает название источника данных.
 func (f *grinexFeed) ID() string {
-	return grinexID
+	return f.id
 }
 
 // GetQuote возвращает рыночную котировку для валютной пары USDT/RUB.
@@ -44,7 +54,7 @@ func (f *grinexFeed) GetQuote(ctx context.Context) (entity.Quote, error) {
 	var result grinexResponse
 
 	// Формируем HTTP-запрос с привязкой к контексту.
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, grinexAPIURL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, f.url, nil)
 	if err != nil {
 		return entity.Quote{}, fmt.Errorf("%s: %w", text.ErrRequestBuild, err)
 	}
