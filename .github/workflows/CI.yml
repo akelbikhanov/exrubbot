@@ -22,12 +22,12 @@ jobs:
         with:
           fetch-depth: 1
       - name: Setup Go & cache modules
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
           cache: true
       - name: Run linters
-        uses: golangci/golangci-lint-action@v8
+        uses: golangci/golangci-lint-action@v9
         with:
           version: latest
           args: --config .golangci.yml --concurrency 4
@@ -42,7 +42,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Setup Go & cache modules
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
           cache: true
