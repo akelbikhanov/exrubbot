@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.release.target_commitish }}
       - name: Set up Buildx
